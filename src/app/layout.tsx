@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "@/provider/theme-provider";
 import "./globals.css";
+import Navbar from "@/components/shared/Navbar";
 
 const josefinSans = Josefin_Sans({
   variable: "--font-josefin",
@@ -33,6 +34,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>
