@@ -3,6 +3,7 @@ import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "@/provider/theme-provider";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
 
 const josefinSans = Josefin_Sans({
   variable: "--font-josefin",
@@ -36,6 +37,7 @@ export default function RootLayout({
         >
           <Navbar />
           {children}
+           <Footer />
         </ThemeProvider>
       </body>
     </html>
