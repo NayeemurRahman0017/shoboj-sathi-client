@@ -1,6 +1,8 @@
+
 import Hero from "@/components/home/Hero";
 import Features from "@/components/home/Features";
 import UpcomingEvents from "@/components/home/UpcomingEvents";
+import Gallery from "@/components/home/Gallery";
 
 export default function HomePage() {
   return (
@@ -8,6 +10,7 @@ export default function HomePage() {
       <Hero />
       <Features />
       <UpcomingEvents />
+      <Gallery />
     </main>
   );
 }
