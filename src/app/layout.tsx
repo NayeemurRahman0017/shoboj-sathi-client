@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/provider/theme-provider";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { Suspense } from "react";
 
 const josefinSans = Josefin_Sans({
   variable: "--font-josefin",
@@ -35,7 +36,9 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <Navbar />
+          <Suspense fallback={<div className="h-20" />}>
+    <Navbar />
+  </Suspense>
           {children}
            <Footer />
         </ThemeProvider>
