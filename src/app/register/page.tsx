@@ -3,218 +3,299 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Eye,
   EyeOff,
   Mail,
   Lock,
   User,
+  Image as ImageIcon,
   Leaf,
+  Loader2,
 } from "lucide-react";
-import { FaGithub } from "react-icons/fa";
+import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [photoURL, setPhotoURL] = useState("");
+  const [password, setPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const validatePassword = (value: string) => {
+    if (value.length < 6) {
+      return "Password must be at least 6 characters long.";
+    }
+
+    if (!/[A-Z]/.test(value)) {
+      return "Password must contain at least one uppercase letter.";
+    }
+
+    if (!/[a-z]/.test(value)) {
+      return "Password must contain at least one lowercase letter.";
+    }
+
+    return "";
+  };
+
+  const handleRegister = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    const passwordError = validatePassword(password);
+
+    if (passwordError) {
+      toast.error(passwordError);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        image: photoURL.trim() || undefined,
+        callbackURL: "/",
+      });
+
+      if (error) {
+        toast.error(error.message || "Registration failed.");
+        return;
+      }
+
+      toast.success("Registration successful! Welcome to ShobujSathi.");
+
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f8faf5] px-5 py-12 dark:bg-background">
-      <div className="w-full max-w-md">
-        <div className="rounded-3xl border border-emerald-100 bg-white p-7 shadow-sm sm:p-10 dark:border-border dark:bg-card">
+    <main className="min-h-[calc(100vh-80px)] bg-[#faf9f4] px-4 py-10 dark:bg-[#101b16] sm:py-14">
+      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/5 dark:border-white/10 dark:bg-[#17251d] md:grid-cols-2">
 
-          {/* Logo */}
+        {/* Left Side */}
+        <div className="relative hidden min-h-175 flex-col justify-between overflow-hidden bg-[#174d36] p-10 text-white md:flex">
+          <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full border-40 border-white/5" />
+          <div className="absolute -bottom-24 -left-20 h-80 w-80 rounded-full border-50 border-white/5" />
+
           <Link
             href="/"
-            className="mb-8 flex items-center justify-center gap-2"
+            className="relative z-10 flex items-center gap-2 text-2xl font-bold"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-600 text-white">
-              <Leaf size={25} />
-            </div>
-
-            <span className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">
-              ShobujShathi
-            </span>
+            <Leaf className="h-7 w-7" />
+            ShobujSathi
           </Link>
 
-          {/* Heading */}
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-foreground">
-              Create Account
+          <div className="relative z-10">
+            <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-emerald-200">
+              Be a Part of the Change
+            </p>
+
+            <h1 className="mb-5 text-4xl font-bold leading-tight">
+              Join Our
+              <br />
+              Green Community.
             </h1>
 
-            <p className="mt-2 text-sm text-gray-500 dark:text-muted-foreground">
-              Join our community and make a difference.
+            <p className="max-w-sm leading-7 text-emerald-100">
+              Create your account, connect with people, and take part in
+              meaningful community service events.
             </p>
           </div>
 
-          {/* Social Signup */}
-          <div className="space-y-3">
-
-            {/* Google */}
-            <button
-              type="button"
-              className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 py-3.5 font-semibold text-gray-700 transition hover:bg-gray-50 dark:border-border dark:text-foreground dark:hover:bg-muted"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.05 5.05 0 0 1-2.2 3.31v2.77h3.57c2.09-1.92 3.27-4.74 3.27-8.09Z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.1V7.06H2.18A11 11 0 0 0 1 12c0 1.78.43 3.46 1.18 4.94l3.66-2.84Z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.37c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 0 0-9.82 6.06L5.84 9.9C6.71 7.3 9.14 5.37 12 5.37Z"
-                />
-              </svg>
-
-              Continue with Google
-            </button>
-
-            {/* GitHub */}
-            <button
-              type="button"
-              className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 py-3.5 font-semibold text-gray-700 transition hover:bg-gray-50 dark:border-border dark:text-foreground dark:hover:bg-muted"
-            >
-              <FaGithub size={20} />
-              Continue with GitHub
-            </button>
-          </div>
-
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-gray-200 dark:bg-border" />
-
-            <span className="text-xs text-gray-400">
-              OR REGISTER WITH EMAIL
-            </span>
-
-            <div className="h-px flex-1 bg-gray-200 dark:bg-border" />
-          </div>
-
-          {/* Registration Form */}
-          <form className="space-y-5">
-
-            {/* Name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="mb-2 block text-sm font-semibold text-gray-700 dark:text-foreground"
-              >
-                Full Name
-              </label>
-
-              <div className="relative">
-                <User
-                  size={19}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  required
-                  className="w-full rounded-xl border border-gray-200 bg-transparent py-3.5 pl-12 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-border"
-                />
-              </div>
-            </div>
-
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-semibold text-gray-700 dark:text-foreground"
-              >
-                Email Address
-              </label>
-
-              <div className="relative">
-                <Mail
-                  size={19}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  className="w-full rounded-xl border border-gray-200 bg-transparent py-3.5 pl-12 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-border"
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-semibold text-gray-700 dark:text-foreground"
-              >
-                Password
-              </label>
-
-              <div className="relative">
-                <Lock
-                  size={19}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Minimum 8 characters"
-                  minLength={8}
-                  required
-                  className="w-full rounded-xl border border-gray-200 bg-transparent py-3.5 pl-12 pr-12 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-border"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff size={19} />
-                  ) : (
-                    <Eye size={19} />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="button"
-              className="w-full rounded-xl bg-emerald-700 py-3.5 font-semibold text-white transition hover:bg-emerald-800"
-            >
-              Create Account
-            </button>
-          </form>
-
-          {/* Login Link */}
-          <p className="mt-7 text-center text-sm text-gray-500 dark:text-muted-foreground">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-semibold text-emerald-700 hover:underline dark:text-emerald-400"
-            >
-              Sign In
-            </Link>
+          <p className="relative z-10 text-sm text-emerald-200">
+            Together, We Make a Difference.
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-gray-400">
-          Together, We Make a Difference.
-        </p>
+        {/* Right Side */}
+        <div className="flex items-center justify-center px-6 py-10 sm:px-10 md:px-12">
+          <div className="w-full max-w-md">
+
+            <Link
+              href="/"
+              className="mb-7 flex items-center justify-center gap-2 text-xl font-bold text-[#174d36] dark:text-emerald-400 md:hidden"
+            >
+              <Leaf className="h-6 w-6" />
+              ShobujSathi
+            </Link>
+
+            <div className="mb-7">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
+                Get Started
+              </p>
+
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Create an Account
+              </h2>
+
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                Join ShobujSathi and start making a difference.
+              </p>
+            </div>
+
+            <form onSubmit={handleRegister} className="space-y-4">
+
+              {/* Name */}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Full Name
+                </label>
+
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+
+                  <input
+                    id="name"
+                    type="text"
+                    required
+                    autoComplete="name"
+                    placeholder="Enter your full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-12 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/10 dark:border-white/15 dark:bg-[#101b16] dark:text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Email Address
+                </label>
+
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-12 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/10 dark:border-white/15 dark:bg-[#101b16] dark:text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Photo URL */}
+              <div>
+                <label
+                  htmlFor="photoURL"
+                  className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Photo URL
+                  <span className="ml-1 font-normal text-gray-400">
+                    (Optional)
+                  </span>
+                </label>
+
+                <div className="relative">
+                  <ImageIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+
+                  <input
+                    id="photoURL"
+                    type="url"
+                    placeholder="https://example.com/photo.jpg"
+                    value={photoURL}
+                    onChange={(e) => setPhotoURL(e.target.value)}
+                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-12 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/10 dark:border-white/15 dark:bg-[#101b16] dark:text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Password
+                </label>
+
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    autoComplete="new-password"
+                    placeholder="Create a strong password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-12 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/10 dark:border-white/15 dark:bg-[#101b16] dark:text-white"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-700"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+
+                <p className="mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400">
+                  At least 6 characters, including one uppercase and one
+                  lowercase letter.
+                </p>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-[#103c29] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading && (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                )}
+
+                {loading ? "Creating Account..." : "Create Account"}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="font-bold text-emerald-700 hover:underline dark:text-emerald-400"
+              >
+                Sign In
+              </Link>
+            </p>
+
+          </div>
+        </div>
       </div>
     </main>
   );
 }
-
