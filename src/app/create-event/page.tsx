@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import {
 CalendarDays,
@@ -13,7 +14,6 @@ Tag,
 ArrowLeft,
 Leaf,
 } from "lucide-react";
-import Link from "next/link";
 
 const eventCategories = [
 "Cleanup",
@@ -34,6 +34,7 @@ location: string;
 date: string;
 }
 
+// This function runs only when the form is submitted.
 function getLocalDateString() {
 const date = new Date();
 const year = date.getFullYear();
@@ -77,43 +78,57 @@ function handleSubmit(e: FormEvent<HTMLFormElement>) {
 e.preventDefault();
 
 
+if (isSubmitting) return;
+
+// Validate event title
 if (!formData.title.trim()) {
   toast.error("Please enter an event title.");
   return;
 }
 
+// Validate description
 if (!formData.description.trim()) {
   toast.error("Please enter an event description.");
   return;
 }
 
+// Validate category
 if (!formData.category) {
   toast.error("Please select an event category.");
   return;
 }
 
+// Validate image URL
 if (!formData.image.trim()) {
   toast.error("Please provide an event image URL.");
   return;
 }
 
 try {
-  new URL(formData.image);
+  const imageUrl = new URL(formData.image);
+
+  if (!["http:", "https:"].includes(imageUrl.protocol)) {
+    toast.error("Please enter a valid image URL.");
+    return;
+  }
 } catch {
   toast.error("Please enter a valid image URL.");
   return;
 }
 
+// Validate location
 if (!formData.location.trim()) {
   toast.error("Please enter the event location.");
   return;
 }
 
+// Validate date
 if (!formData.date) {
   toast.error("Please select an event date.");
   return;
 }
 
+// Prevent past dates and today's date
 if (formData.date <= getLocalDateString()) {
   toast.error("Please select a future date.");
   return;
@@ -125,7 +140,6 @@ setIsSubmitting(true);
 toast.success("Event form completed successfully!");
 
 setTimeout(() => {
-  setIsSubmitting(false);
   router.push("/events");
 }, 1000);
 
@@ -165,6 +179,7 @@ Back to Events </Link>
       {/* Form Header */}
       <div className="bg-[#174d36] px-6 py-7 text-white sm:px-9">
         <h2 className="text-xl font-semibold">Event Information</h2>
+
         <p className="mt-2 text-sm text-emerald-100">
           Fill in the details below to create your community event.
         </p>
@@ -305,7 +320,6 @@ Back to Events </Link>
               id="date"
               name="date"
               type="date"
-              min={getLocalDateString()}
               value={formData.date}
               onChange={handleChange}
               className={inputClass}
@@ -326,6 +340,7 @@ Back to Events </Link>
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:min-w-48"
           >
             {isSubmitting ? "Creating Event..." : "Create Event"}
+
             {!isSubmitting && <Leaf size={17} />}
           </button>
 

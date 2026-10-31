@@ -1,16 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-ArrowLeft,
 CalendarDays,
 MapPin,
 Users,
 Leaf,
 Search,
 CalendarCheck,
+XCircle,
 } from "lucide-react";
 
 interface JoinedEvent {
@@ -26,7 +26,7 @@ volunteers: number;
 requiredVolunteers: number;
 }
 
-const joinedEvents: JoinedEvent[] = [
+const initialJoinedEvents: JoinedEvent[] = [
 {
 id: "winter-clothes",
 title: "Winter Clothes Distribution",
@@ -70,34 +70,55 @@ requiredVolunteers: 25,
 
 export default function JoinedEventsPage() {
 const [search, setSearch] = useState("");
+const [events, setEvents] = useState<JoinedEvent[]>(initialJoinedEvents);
+const [eventToCancel, setEventToCancel] = useState<string | null>(null);
+const [upcomingCount, setUpcomingCount] = useState(0);
+
+useEffect(() => {
+const timer = setTimeout(() => {
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+
+  const count = events.filter((event) => {
+    const eventDate = new Date(event.date + "T00:00:00");
+    return eventDate >= today;
+  }).length;
+
+  setUpcomingCount(count);
+}, 0);
+
+return () => clearTimeout(timer);
+
+
+}, [events]);
 
 const sortedEvents = useMemo(() => {
-return [...joinedEvents]
+return [...events]
 .filter((event) =>
 `${event.title} ${event.location} ${event.category}`
 .toLowerCase()
 .includes(search.toLowerCase())
 )
-.sort(
-(a, b) =>
-new Date(a.date).getTime() - new Date(b.date).getTime()
+.sort((a, b) => a.date.localeCompare(b.date));
+}, [search, events]);
+
+const handleCancel = () => {
+if (!eventToCancel) return;
+
+
+setEvents((previousEvents) =>
+  previousEvents.filter((event) => event.id !== eventToCancel)
 );
-}, [search]);
 
-return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="mx-auto max-w-6xl">
-{/* Back Navigation */} <Link
-       href="/"
-       className="mb-7 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-emerald-700"
-     > <ArrowLeft size={17} />
-Back to Home </Link>
+setEventToCancel(null);
 
 
-    {/* Page Heading */}
-    <div className="mb-9">
-      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
-        <Leaf size={16} />
-        Your Community Activities
-      </div>
+};
+
+return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="mx-auto max-w-6xl"> <div className="mb-9"> <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800"> <Leaf size={16} />
+Your Community Activities </div>
+
 
       <h1 className="text-3xl font-bold tracking-tight text-[#174d36] sm:text-4xl">
         My Joined Events
@@ -117,9 +138,11 @@ Back to Home </Link>
         </div>
 
         <div>
-          <p className="text-sm text-emerald-800">Total Joined Events</p>
+          <p className="text-sm text-emerald-800">
+            Total Joined Events
+          </p>
           <p className="mt-1 text-2xl font-bold text-[#174d36]">
-            {joinedEvents.length}
+            {events.length}
           </p>
         </div>
       </div>
@@ -130,9 +153,11 @@ Back to Home </Link>
         </div>
 
         <div>
-          <p className="text-sm text-amber-800">Upcoming Activities</p>
+          <p className="text-sm text-amber-800">
+            Upcoming Activities
+          </p>
           <p className="mt-1 text-2xl font-bold text-gray-800">
-            {joinedEvents.length}
+            {upcomingCount}
           </p>
         </div>
       </div>
@@ -255,12 +280,24 @@ Back to Home </Link>
                   </div>
                 </div>
 
-                <Link
-                  href={`/events/${event.id}`}
-                  className="mt-5 flex w-full items-center justify-center rounded-xl bg-[#174d36] px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
-                >
-                  View Event Details
-                </Link>
+                {/* Actions */}
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  <Link
+                    href={`/events/${event.id}`}
+                    className="flex items-center justify-center rounded-xl bg-[#174d36] px-3 py-3 text-center text-sm font-semibold text-white transition hover:bg-emerald-800"
+                  >
+                    View Details
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => setEventToCancel(event.id)}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+                  >
+                    <XCircle size={17} />
+                    Cancel
+                  </button>
+                </div>
               </div>
             </article>
           ))}
@@ -292,6 +329,44 @@ Back to Home </Link>
       </div>
     )}
   </div>
+
+  {/* Cancel Confirmation Modal */}
+  {eventToCancel && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-red-600">
+          <XCircle size={30} />
+        </div>
+
+        <h2 className="mt-4 text-center text-xl font-bold text-[#174d36]">
+          Cancel Participation?
+        </h2>
+
+        <p className="mt-3 text-center text-sm leading-6 text-gray-500">
+          Are you sure you want to cancel your participation in this
+          event? You can join again later if registration is available.
+        </p>
+
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setEventToCancel(null)}
+            className="rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 transition hover:bg-gray-50"
+          >
+            Keep Event
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+          >
+            Yes, Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
 </main>
 
 
@@ -299,9 +374,22 @@ Back to Home </Link>
 }
 
 function formatDate(date: string) {
-return new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
-day: "numeric",
-month: "long",
-year: "numeric",
-});
+const [year, month, day] = date.split("-").map(Number);
+
+const monthName = [
+"January",
+"February",
+"March",
+"April",
+"May",
+"June",
+"July",
+"August",
+"September",
+"October",
+"November",
+"December",
+];
+
+return `${monthName[month - 1]} ${day}, ${year}`;
 }
