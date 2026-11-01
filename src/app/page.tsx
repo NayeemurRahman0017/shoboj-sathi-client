@@ -7,11 +7,13 @@ import Newsletter from "@/components/home/Newsletter";
 export default function HomePage() {
   return (
     <main>
-      <Hero />
-      <Features />
-      <UpcomingEvents />
-      <Gallery />
-      <Newsletter />
+      <div className="container mx-auto px-4">
+        <Hero />
+        <Features />
+        <UpcomingEvents />
+        <Gallery />
+        <Newsletter />
+      </div>
     </main>
   );
 }

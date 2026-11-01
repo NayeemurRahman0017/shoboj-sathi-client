@@ -12,8 +12,6 @@ export default function Newsletter() {
 
     if (!email.trim()) return;
 
-    // Temporary frontend interaction.
-    // Backend API integration will be added later.
     setSubscribed(true);
     setEmail("");
   };

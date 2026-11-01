@@ -74,9 +74,9 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-[calc(100vh-80px)] bg-[#faf9f4] px-4 py-12 dark:bg-[#101b16] sm:py-16">
+      <div className="container mx-auto px-4">
       <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/5 dark:border-white/10 dark:bg-[#17251d] md:grid-cols-2">
 
-        {/* Left side */}
         <div className="relative hidden min-h-155 flex-col justify-between overflow-hidden bg-[#174d36] p-10 text-white md:flex">
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full border-40 border-white/5" />
           <div className="absolute -bottom-24 -left-20 h-80 w-80 rounded-full border-50 border-white/5" />
@@ -108,7 +108,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Right side */}
         <div className="flex items-center justify-center px-6 py-10 sm:px-10 md:px-12">
           <div className="w-full max-w-md">
 
@@ -134,7 +133,6 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Social login */}
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -261,6 +259,7 @@ export default function LoginPage() {
 
           </div>
         </div>
+      </div>
       </div>
     </main>
   );

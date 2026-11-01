@@ -55,7 +55,6 @@ const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
 const user = session?.user;
 
-// Close profile dropdown when clicking outside
 useEffect(() => {
 function handleClickOutside(event: MouseEvent) {
 if (
@@ -105,8 +104,8 @@ pathname === href ||
 );
 }
 
-return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#faf9f5]/95 backdrop-blur-md"> <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-{/* Logo */} <Link
+return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9BB5A0]/95 backdrop-blur-md"> <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+ <Link
        href="/"
        onClick={closeMenus}
        className="flex items-center gap-2"
@@ -124,7 +123,6 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#f
       </div>
     </Link>
 
-    {/* Desktop Navigation */}
     <div className="hidden items-center gap-8 md:flex">
       {navLinks.map((link) => (
         <Link
@@ -141,7 +139,6 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#f
       ))}
     </div>
 
-    {/* Desktop Actions */}
     <div className="hidden items-center gap-4 md:flex">
       <ThemeToggle />
 
@@ -245,7 +242,6 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#f
       )}
     </div>
 
-    {/* Mobile Actions */}
     <div className="flex items-center gap-3 md:hidden">
       <ThemeToggle />
 
@@ -263,9 +259,8 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#f
     </div>
   </nav>
 
-  {/* Mobile Menu */}
   {mobileMenuOpen && (
-    <div className="border-t border-emerald-100 bg-[#faf9f5] px-5 py-5 shadow-lg md:hidden">
+    <div className="border-t border-emerald-100 bg-[#283618] px-5 py-5 shadow-lg md:hidden">
       <div className="flex flex-col gap-2">
         {navLinks.map((link) => (
           <Link
@@ -296,7 +291,6 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#f
 
         {!isPending && user && (
           <>
-            {/* User Information */}
             <div className="mb-4 flex items-center gap-3 rounded-xl bg-emerald-50 p-3">
               {user.image ? (
                 <Image
@@ -322,7 +316,6 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#f
               </div>
             </div>
 
-            {/* Dashboard Links */}
             <div className="space-y-1">
               {dashboardLinks.map((link) => {
                 const Icon = link.icon;
@@ -345,7 +338,6 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#f
               })}
             </div>
 
-            {/* Logout */}
             <button
               type="button"
               onClick={handleLogout}

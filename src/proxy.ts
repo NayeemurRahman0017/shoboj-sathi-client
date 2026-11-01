@@ -10,16 +10,13 @@ const protectedRoutes = [
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Check whether the requested route is protected
   const isProtectedRoute = protectedRoutes.some(
     (route) =>
       pathname === route || pathname.startsWith(`${route}/`)
   );
 
-  // Check Better Auth session cookie
   const sessionCookie = getSessionCookie(request);
 
-  // Redirect unauthenticated users to login
   if (isProtectedRoute && !sessionCookie) {
     const loginURL = new URL("/login", request.url);
 

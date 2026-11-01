@@ -34,7 +34,6 @@ location: string;
 date: string;
 }
 
-// This function runs only when the form is submitted.
 function getLocalDateString() {
 const date = new Date();
 const year = date.getFullYear();
@@ -80,25 +79,21 @@ e.preventDefault();
 
 if (isSubmitting) return;
 
-// Validate event title
 if (!formData.title.trim()) {
   toast.error("Please enter an event title.");
   return;
 }
 
-// Validate description
 if (!formData.description.trim()) {
   toast.error("Please enter an event description.");
   return;
 }
 
-// Validate category
 if (!formData.category) {
   toast.error("Please select an event category.");
   return;
 }
 
-// Validate image URL
 if (!formData.image.trim()) {
   toast.error("Please provide an event image URL.");
   return;
@@ -116,19 +111,16 @@ try {
   return;
 }
 
-// Validate location
 if (!formData.location.trim()) {
   toast.error("Please enter the event location.");
   return;
 }
 
-// Validate date
 if (!formData.date) {
   toast.error("Please select an event date.");
   return;
 }
 
-// Prevent past dates and today's date
 if (formData.date <= getLocalDateString()) {
   toast.error("Please select a future date.");
   return;
@@ -136,7 +128,6 @@ if (formData.date <= getLocalDateString()) {
 
 setIsSubmitting(true);
 
-// Frontend demo only. Database integration will be added later.
 toast.success("Event form completed successfully!");
 
 setTimeout(() => {
@@ -149,15 +140,14 @@ setTimeout(() => {
 const inputClass =
 "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
 
-return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="mx-auto max-w-5xl">
-{/* Back Navigation */} <Link
+return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="container mx-auto px-4"> <div className="mx-auto max-w-5xl">
+ <Link
        href="/events"
        className="mb-7 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-emerald-700"
      > <ArrowLeft size={17} />
 Back to Events </Link>
 
 
-    {/* Page Heading */}
     <div className="mb-9">
       <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
         <Leaf size={16} />
@@ -174,9 +164,7 @@ Back to Events </Link>
       </p>
     </div>
 
-    {/* Form Container */}
     <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-      {/* Form Header */}
       <div className="bg-[#174d36] px-6 py-7 text-white sm:px-9">
         <h2 className="text-xl font-semibold">Event Information</h2>
 
@@ -186,7 +174,6 @@ Back to Events </Link>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-7 p-6 sm:p-9">
-        {/* Event Title */}
         <div>
           <label
             htmlFor="title"
@@ -208,7 +195,6 @@ Back to Events </Link>
           />
         </div>
 
-        {/* Description */}
         <div>
           <label
             htmlFor="description"
@@ -230,7 +216,6 @@ Back to Events </Link>
           />
         </div>
 
-        {/* Category */}
         <div>
           <label
             htmlFor="category"
@@ -258,7 +243,6 @@ Back to Events </Link>
           </select>
         </div>
 
-        {/* Image URL */}
         <div>
           <label
             htmlFor="image"
@@ -284,7 +268,6 @@ Back to Events </Link>
           </p>
         </div>
 
-        {/* Location and Date */}
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
             <label
@@ -332,7 +315,6 @@ Back to Events </Link>
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className="border-t border-gray-100 pt-6">
           <button
             type="submit"
@@ -351,6 +333,7 @@ Back to Events </Link>
         </div>
       </form>
     </div>
+  </div>
   </div>
 </main>
 

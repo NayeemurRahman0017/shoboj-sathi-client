@@ -116,7 +116,7 @@ setEventToCancel(null);
 
 };
 
-return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="mx-auto max-w-6xl"> <div className="mb-9"> <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800"> <Leaf size={16} />
+return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="container mx-auto px-4"> <div className="mx-auto max-w-6xl"> <div className="mb-9"> <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800"> <Leaf size={16} />
 Your Community Activities </div>
 
 
@@ -130,7 +130,6 @@ Your Community Activities </div>
       </p>
     </div>
 
-    {/* Summary */}
     <div className="mb-8 grid gap-4 sm:grid-cols-2">
       <div className="flex items-center gap-4 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-emerald-700">
@@ -163,7 +162,6 @@ Your Community Activities </div>
       </div>
     </div>
 
-    {/* Search */}
     <div className="mb-7 flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm sm:max-w-md">
       <Search size={19} className="shrink-0 text-gray-400" />
 
@@ -176,7 +174,6 @@ Your Community Activities </div>
       />
     </div>
 
-    {/* Events */}
     {sortedEvents.length > 0 ? (
       <>
         <div className="mb-5 flex items-center justify-between">
@@ -195,7 +192,6 @@ Your Community Activities </div>
               key={event.id}
               className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              {/* Image */}
               <div className="relative h-52 w-full bg-emerald-50">
                 <Image
                   src={event.image}
@@ -214,7 +210,6 @@ Your Community Activities </div>
                 </span>
               </div>
 
-              {/* Content */}
               <div className="p-5">
                 <h3 className="line-clamp-1 text-xl font-bold text-[#174d36]">
                   {event.title}
@@ -253,7 +248,6 @@ Your Community Activities </div>
                   </div>
                 </div>
 
-                {/* Progress */}
                 <div className="mt-4">
                   <div className="mb-2 flex justify-between text-xs text-gray-500">
                     <span>Volunteer Progress</span>
@@ -280,7 +274,6 @@ Your Community Activities </div>
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <Link
                     href={`/events/${event.id}`}
@@ -330,7 +323,6 @@ Your Community Activities </div>
     )}
   </div>
 
-  {/* Cancel Confirmation Modal */}
   {eventToCancel && (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
@@ -367,6 +359,7 @@ Your Community Activities </div>
       </div>
     </div>
   )}
+  </div>
 </main>
 
 

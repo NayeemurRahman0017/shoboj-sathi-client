@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,12 +10,15 @@ import {
   Leaf,
 } from "lucide-react";
 
+import { authClient } from "@/lib/auth-client";
+
 export default function Hero() {
+  const { data: session } = authClient.useSession();
+
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto grid min-h-162.5 max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-2 lg:px-8 lg:py-20">
 
-        {/* Hero Content */}
         <div className="relative z-10">
           <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-secondary px-4 py-2 text-sm font-semibold text-primary">
             <Leaf size={16} />
@@ -42,14 +47,13 @@ export default function Hero() {
             </Link>
 
             <Link
-              href="/register"
+              href={session ? "/joined-events" : "/register"}
               className="rounded-full border border-border bg-card px-7 py-4 font-semibold text-foreground transition hover:bg-muted"
             >
               Become a Volunteer
             </Link>
           </div>
 
-          {/* Statistics */}
           <div className="mt-14 grid max-w-lg grid-cols-3 gap-5 border-t border-border pt-8">
             <div>
               <div className="flex items-center gap-2 text-primary">
@@ -83,18 +87,18 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Hero Visual */}
         <div className="relative mx-auto w-full max-w-xl">
           <div className="absolute -right-8 -top-8 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute -bottom-8 -left-8 h-48 w-48 rounded-full bg-amber-400/10 blur-3xl" />
 
           <div className="relative overflow-hidden rounded-[2rem] border border-border bg-secondary p-4 shadow-2xl sm:p-6">
-            <div className="relative aspect-[4/4.2] overflow-hidden rounded-[1.5rem] bg-[#dcebdc] dark:bg-[#263c30]">
+            <div className="relative aspect-[5/2] overflow-hidden rounded-[1.5rem] bg-[#dcebdc] dark:bg-[#263c30]">
               <Image
                 src="/images/hero/Hero%20Banner.png"
                 alt="ShobujShathi volunteers making a difference"
                 fill
                 priority
+                quality={90}
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />

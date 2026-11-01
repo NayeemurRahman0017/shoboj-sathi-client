@@ -114,7 +114,6 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-// Event Details Content
 async function EventDetailsContent({ params }: Props) {
   const { id } = await params;
 
@@ -126,8 +125,8 @@ async function EventDetailsContent({ params }: Props) {
 
   return (
     <main className="min-h-screen px-5 py-12 sm:px-8 lg:px-16">
+      <div className="container mx-auto px-4">
       <div className="mx-auto max-w-7xl">
-        {/* Back Button */}
         <Link
           href="/events"
           className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-emerald-700 transition hover:text-emerald-900 dark:text-emerald-400"
@@ -137,7 +136,6 @@ async function EventDetailsContent({ params }: Props) {
         </Link>
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
-          {/* Main Content */}
           <div className="lg:col-span-2">
             <div className="relative h-72 overflow-hidden rounded-3xl sm:h-105">
               <Image
@@ -185,7 +183,6 @@ async function EventDetailsContent({ params }: Props) {
             </div>
           </div>
 
-          {/* Event Information Sidebar */}
           <aside>
             <div className="sticky top-24 rounded-3xl border border-border bg-card p-6 shadow-sm">
               <h2 className="text-xl font-bold text-foreground">
@@ -236,7 +233,6 @@ async function EventDetailsContent({ params }: Props) {
                 </div>
               </div>
 
-              {/* Volunteer Progress */}
               <div className="mt-7">
                 <div className="mb-2 flex justify-between text-sm">
                   <span className="text-muted-foreground">
@@ -263,7 +259,6 @@ async function EventDetailsContent({ params }: Props) {
                 </div>
               </div>
 
-              {/* Join Button */}
               <button
                 disabled
                 className="mt-8 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3.5 font-semibold text-white opacity-70"
@@ -279,11 +274,11 @@ async function EventDetailsContent({ params }: Props) {
           </aside>
         </div>
       </div>
+      </div>
     </main>
   );
 }
 
-// Loading Fallback
 function EventDetailsLoading() {
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -292,7 +287,6 @@ function EventDetailsLoading() {
   );
 }
 
-// Main Page
 export default function EventDetailsPage({ params }: Props) {
   return (
     <Suspense fallback={<EventDetailsLoading />}>

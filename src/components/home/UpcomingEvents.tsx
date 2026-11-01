@@ -115,7 +115,6 @@ export default function UpcomingEvents() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Events");
 
-  // Filter expired events after the component mounts.
   useEffect(() => {
     const filterUpcomingEvents = () => {
       const today = new Date();
@@ -131,13 +130,11 @@ export default function UpcomingEvents() {
 
     filterUpcomingEvents();
 
-    // Refresh the list periodically.
     const interval = setInterval(filterUpcomingEvents, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Search and category filtering.
   const filteredEvents = useMemo(() => {
     return upcomingEvents.filter((event) => {
       const matchesCategory =
@@ -157,7 +154,6 @@ export default function UpcomingEvents() {
 
   return (
     <section className="min-h-screen bg-background">
-      {/* Page Header */}
       <div className="relative overflow-hidden bg-[#174d36] px-5 py-20 text-white sm:py-24">
         <div className="absolute -right-20 -top-32 h-96 w-96 rounded-full border-50 border-white/5" />
         <div className="absolute -bottom-40 -left-20 h-96 w-96 rounded-full border-50 border-white/5" />
@@ -191,9 +187,7 @@ export default function UpcomingEvents() {
         </div>
       </div>
 
-      {/* Events Section */}
       <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-        {/* Section Heading */}
         <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
@@ -215,7 +209,6 @@ export default function UpcomingEvents() {
           </div>
         </div>
 
-        {/* Search & Filter */}
         <div className="mb-10 flex flex-col gap-4 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative w-full sm:max-w-sm">
             <Search
@@ -250,7 +243,6 @@ export default function UpcomingEvents() {
           </div>
         </div>
 
-        {/* Loading State */}
         {!isMounted ? (
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 3 }).map((_, index) => (
@@ -261,14 +253,12 @@ export default function UpcomingEvents() {
             ))}
           </div>
         ) : filteredEvents.length > 0 ? (
-          /* Events Grid */
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
             {filteredEvents.map((event) => (
               <article
                 key={event.id}
                 className="group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/5"
               >
-                {/* Thumbnail */}
                 <div className="relative h-56 overflow-hidden bg-secondary">
                   <Image
                     src={event.image}
@@ -283,7 +273,6 @@ export default function UpcomingEvents() {
                   </span>
                 </div>
 
-                {/* Content */}
                 <div className="p-5">
                   <h3 className="mb-3 line-clamp-1 text-xl font-bold text-foreground transition-colors group-hover:text-primary">
                     {event.title}
@@ -314,7 +303,6 @@ export default function UpcomingEvents() {
                     </div>
                   </div>
 
-                  {/* View Details */}
                   <Link
                     href={`/events/${event.id}`}
                     className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-bold text-primary-foreground transition hover:opacity-90"
@@ -327,7 +315,6 @@ export default function UpcomingEvents() {
             ))}
           </div>
         ) : (
-          /* Empty State */
           <div className="rounded-2xl border border-dashed border-border py-20 text-center">
             <CalendarDays className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
 

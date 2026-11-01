@@ -50,7 +50,7 @@ icon: FaGithub,
 
 export default function Footer() {
 return ( <footer className="bg-emerald-950 px-5 pt-16 text-white sm:px-8 lg:px-16"> <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-4">
-{/* Brand */} <div> <Link href="/" className="text-2xl font-bold">
+ <div> <Link href="/" className="text-2xl font-bold">
 Shobuj<span className="text-emerald-400">Shathi</span> </Link>
 
       <p className="mt-4 max-w-xs text-sm leading-7 text-emerald-100/70">
@@ -58,7 +58,6 @@ Shobuj<span className="text-emerald-400">Shathi</span> </Link>
         positive change through meaningful social initiatives.
       </p>
 
-      {/* Social Links */}
       <div className="mt-6 flex gap-3">
         {socialLinks.map((social) => {
           const Icon = social.icon;
@@ -79,7 +78,6 @@ Shobuj<span className="text-emerald-400">Shathi</span> </Link>
       </div>
     </div>
 
-    {/* Quick Links */}
     <div>
       <h3 className="mb-5 text-lg font-semibold">Quick Links</h3>
 
@@ -97,7 +95,6 @@ Shobuj<span className="text-emerald-400">Shathi</span> </Link>
       </ul>
     </div>
 
-    {/* Activities */}
     <div>
       <h3 className="mb-5 text-lg font-semibold">Our Activities</h3>
 
@@ -110,7 +107,6 @@ Shobuj<span className="text-emerald-400">Shathi</span> </Link>
       </ul>
     </div>
 
-    {/* Contact */}
     <div>
       <h3 className="mb-5 text-lg font-semibold">Contact Us</h3>
 
@@ -135,7 +131,6 @@ Shobuj<span className="text-emerald-400">Shathi</span> </Link>
     </div>
   </div>
 
-  {/* Copyright */}
   <div className="border-t border-white/10 py-6">
     <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center text-xs text-emerald-100/60 sm:flex-row sm:text-left">
       <p>

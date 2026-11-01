@@ -123,14 +123,13 @@ toast.success("Event deleted successfully!");
 
 }
 
-return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="mx-auto max-w-6xl"> <Link
+return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="container mx-auto px-4"> <div className="mx-auto max-w-6xl"> <Link
        href="/"
        className="mb-7 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-emerald-700"
      > <ArrowLeft size={17} />
 Back to Home </Link>
 
 ```
-    {/* Heading */}
     <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
       <div>
         <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
@@ -156,7 +155,6 @@ Back to Home </Link>
       </Link>
     </div>
 
-    {/* Stats */}
     <div className="mb-7 rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
       <p className="text-sm font-medium text-emerald-800">
         Total Events Created
@@ -166,7 +164,6 @@ Back to Home </Link>
       </p>
     </div>
 
-    {/* Search */}
     <div className="mb-7 flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm sm:max-w-md">
       <Search size={19} className="shrink-0 text-gray-400" />
       <input
@@ -178,7 +175,6 @@ Back to Home </Link>
       />
     </div>
 
-    {/* Event List */}
     {filteredEvents.length > 0 ? (
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {filteredEvents.map((event) => (
@@ -265,7 +261,6 @@ Back to Home </Link>
     )}
   </div>
 
-  {/* Edit Modal */}
   {editingEvent && (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4">
       <div className="my-auto w-full max-w-xl rounded-2xl bg-white p-6 shadow-xl sm:p-8">
@@ -423,7 +418,6 @@ Back to Home </Link>
     </div>
   )}
 
-  {/* Delete Confirmation */}
   {deletingEvent && (
     <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-7 text-center shadow-xl">
@@ -461,6 +455,7 @@ Back to Home </Link>
       </div>
     </div>
   )}
+  </div>
 </main>
 
 

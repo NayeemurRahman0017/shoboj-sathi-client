@@ -67,8 +67,8 @@ const events = [
 export default function EventsPage() {
   return (
     <main className="min-h-screen px-5 py-16 sm:px-8 lg:px-16">
+      <div className="container mx-auto px-4">
       <div className="mx-auto max-w-7xl">
-        {/* Page Heading */}
         <div className="mb-12 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
             Make an Impact
@@ -84,14 +84,12 @@ export default function EventsPage() {
           </p>
         </div>
 
-        {/* Events Grid */}
         <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <article
               key={event.id}
               className="group overflow-hidden rounded-2xl border border-border bg-card transition duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              {/* Event Image */}
               <div className="relative h-56 overflow-hidden">
                 <Image
                   src={event.image}
@@ -106,7 +104,6 @@ export default function EventsPage() {
                 </span>
               </div>
 
-              {/* Event Information */}
               <div className="p-6">
                 <h2 className="text-xl font-bold text-foreground">
                   {event.title}
@@ -142,6 +139,7 @@ export default function EventsPage() {
             </article>
           ))}
         </div>
+      </div>
       </div>
     </main>
   );
