@@ -1,10 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
   Heart,
   Users,
   CalendarDays,
-  MapPin,
   Leaf,
 } from "lucide-react";
 
@@ -89,28 +89,15 @@ export default function Hero() {
           <div className="absolute -bottom-8 -left-8 h-48 w-48 rounded-full bg-amber-400/10 blur-3xl" />
 
           <div className="relative overflow-hidden rounded-[2rem] border border-border bg-secondary p-4 shadow-2xl sm:p-6">
-            <div className="relative flex aspect-[4/4.2] items-center justify-center overflow-hidden rounded-[1.5rem] bg-[#dcebdc] dark:bg-[#263c30]">
-              <div className="absolute left-8 top-8 h-32 w-32 rounded-full bg-white/30 blur-2xl" />
-              <div className="absolute bottom-0 h-1/3 w-full rounded-t-[50%] bg-[#b3d4ad] dark:bg-[#365a43]" />
-
-              <div className="relative z-10 flex flex-col items-center text-center">
-                <div className="flex h-36 w-36 items-center justify-center rounded-full bg-white/60 text-primary shadow-xl dark:bg-white/10">
-                  <Heart size={75} strokeWidth={1.4} />
-                </div>
-
-                <h2 className="mt-8 text-3xl font-bold text-[#18352a] dark:text-white">
-                  Together We Grow
-                </h2>
-
-                <p className="mt-2 max-w-xs text-sm text-[#476653] dark:text-gray-200">
-                  Every helping hand brings hope to someone.
-                </p>
-
-                <div className="mt-6 flex items-center gap-2 rounded-full bg-white/80 px-5 py-3 text-sm font-semibold text-[#16834b] shadow-md dark:bg-[#17251d] dark:text-[#35b978]">
-                  <MapPin size={16} />
-                  Your Community Needs You
-                </div>
-              </div>
+            <div className="relative aspect-[4/4.2] overflow-hidden rounded-[1.5rem] bg-[#dcebdc] dark:bg-[#263c30]">
+              <Image
+                src="/images/hero/Hero%20Banner.png"
+                alt="ShobujShathi volunteers making a difference"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
           </div>
 

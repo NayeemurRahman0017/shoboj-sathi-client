@@ -10,7 +10,7 @@ const events = [
     date: "November 05, 2026",
     location: "Mirpur 10, Dhaka",
     category: "Community Support",
-    image: "/images/events/winter-clothes.jpg",
+    image: "/images/events/Winter%20Clothes%20Distribution.png",
   },
   {
     id: "community-cleanup",
@@ -20,7 +20,7 @@ const events = [
     date: "November 08, 2026",
     location: "Dhanmondi, Dhaka",
     category: "Environment",
-    image: "/images/events/cleanup.jpg",
+    image: "/images/gallery/Community%20Cleanup.png",
   },
   {
     id: "free-health-camp",
@@ -30,7 +30,7 @@ const events = [
     date: "November 12, 2026",
     location: "Mohammadpur, Dhaka",
     category: "Healthcare",
-    image: "/images/events/health-camp.jpg",
+    image: "/images/events/Healthcare%20Camp.png",
   },
   {
     id: "food-distribution",
@@ -40,7 +40,7 @@ const events = [
     date: "November 15, 2026",
     location: "Uttara, Dhaka",
     category: "Food Support",
-    image: "/images/events/food-distribution.jpg",
+    image: "/images/events/Food%20Distribution.png",
   },
   {
     id: "tree-plantation",
@@ -50,7 +50,7 @@ const events = [
     date: "November 20, 2026",
     location: "Ramna Park, Dhaka",
     category: "Environment",
-    image: "/images/events/tree-plantation.jpg",
+    image: "/images/gallery/Tree%20Plantation.png",
   },
   {
     id: "education-support",
@@ -60,7 +60,7 @@ const events = [
     date: "November 25, 2026",
     location: "Mirpur, Dhaka",
     category: "Education",
-    image: "/images/events/education.jpg",
+    image: "/images/events/Education%20Support.png",
   },
 ];
 

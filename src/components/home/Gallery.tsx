@@ -3,34 +3,39 @@ import Link from "next/link";
 
 const galleryImages = [
 {
-src: "/images/events/winter-clothes.jpg",
+src: "/images/events/Winter%20Clothes%20Distribution.png",
 title: "Winter Clothes Distribution",
 category: "Community Support",
 },
 {
-src: "/images/events/cleanup.jpg",
+src: "/images/gallery/Community%20Cleanup.png",
 title: "Community Cleanup",
 category: "Environment",
 },
 {
-src: "/images/events/health-camp.jpg",
+src: "/images/events/Healthcare%20Camp.png",
 title: "Free Health Camp",
 category: "Healthcare",
 },
 {
-src: "/images/events/food-distribution.jpg",
+src: "/images/events/Food%20Distribution.png",
 title: "Food Distribution",
 category: "Food Support",
 },
 {
-src: "/images/events/tree-plantation.jpg",
+src: "/images/gallery/Tree%20Plantation.png",
 title: "Tree Plantation",
 category: "Environment",
 },
 {
-src: "/images/events/education.jpg",
+src: "/images/events/Education%20Support.png",
 title: "Education for Everyone",
 category: "Education",
+},
+{
+src: "/images/gallery/Volunteer%20Team.png",
+title: "Volunteer Team",
+category: "Community Support",
 },
 ];
 
