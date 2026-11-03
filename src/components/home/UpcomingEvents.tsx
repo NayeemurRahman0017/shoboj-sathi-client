@@ -10,96 +10,25 @@ import {
   Search,
   Leaf,
   Users,
+  CloudOff,
 } from "lucide-react";
 
-const events = [
-  {
-    id: "winter-clothes",
-    title: "Winter Clothes Distribution",
-    description:
-      "Help underprivileged families stay warm this winter by distributing warm clothes.",
-    location: "Mirpur 10, Dhaka",
-    category: "Donation",
-    date: "2026-11-15",
-    time: "09:00 AM",
-    image: "/images/events/Winter%20Clothes%20Distribution.png",
-    volunteers: 18,
-    requiredVolunteers: 30,
-  },
-  {
-    id: "community-cleanup",
-    title: "Community Clean-up Drive",
-    description:
-      "Join us to clean our neighborhood and create a healthier environment.",
-    location: "Dhanmondi, Dhaka",
-    category: "Environment",
-    date: "2026-11-18",
-    time: "08:00 AM",
-    image: "/images/gallery/Community%20Cleanup.png",
-    volunteers: 12,
-    requiredVolunteers: 25,
-  },
-  {
-    id: "free-health-camp",
-    title: "Free Health Checkup Camp",
-    description:
-      "Help organize a free health checkup camp for people who need medical support.",
-    location: "Uttara, Dhaka",
-    category: "Healthcare",
-    date: "2026-11-22",
-    time: "10:00 AM",
-    image: "/images/events/Healthcare%20Camp.png",
-    volunteers: 20,
-    requiredVolunteers: 35,
-  },
-  {
-    id: "food-distribution",
-    title: "Food Distribution Program",
-    description:
-      "Support families in need by helping distribute essential food packages.",
-    location: "Mohammadpur, Dhaka",
-    category: "Donation",
-    date: "2026-11-25",
-    time: "11:00 AM",
-    image: "/images/events/Food%20Distribution.png",
-    volunteers: 15,
-    requiredVolunteers: 30,
-  },
-  {
-    id: "tree-plantation",
-    title: "Tree Plantation Campaign",
-    description:
-      "Plant trees together and contribute to a greener and healthier future.",
-    location: "Savar, Dhaka",
-    category: "Environment",
-    date: "2026-12-05",
-    time: "08:30 AM",
-    image: "/images/gallery/Tree%20Plantation.png",
-    volunteers: 22,
-    requiredVolunteers: 40,
-  },
-  {
-    id: "education-support",
-    title: "Education Support for Children",
-    description:
-      "Volunteer to support children's education through learning materials and guidance.",
-    location: "Gazipur, Dhaka",
-    category: "Education",
-    date: "2026-12-12",
-    time: "09:30 AM",
-    image: "/images/events/Education%20Support.png",
-    volunteers: 10,
-    requiredVolunteers: 20,
-  },
-];
+import { apiFetch, FALLBACK_EVENT_IMAGE, ApiError } from "@/lib/api";
 
-const categories = [
-  "All Events",
-  "Donation",
-  "Environment",
-  "Healthcare",
-  "Education",
-];
+interface EventItem {
+  _id: string;
+  title: string;
+  description: string;
+  location: string;
+  category: string;
+  date: string;
+  image?: string;
+  joinCount?: number;
+}
+
+interface EventsResponse {
+  events: EventItem[];
+}
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("en-BD", {
@@ -110,30 +39,51 @@ function formatDate(date: string) {
 }
 
 export default function UpcomingEvents() {
-  const [upcomingEvents, setUpcomingEvents] = useState<typeof events>([]);
-  const [isMounted, setIsMounted] = useState(false);
+  const [upcomingEvents, setUpcomingEvents] = useState<EventItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Events");
 
   useEffect(() => {
-    const filterUpcomingEvents = () => {
-      const today = new Date();
+    let active = true;
 
-      const filtered = events.filter((event) => {
-        const eventDate = new Date(`${event.date}T23:59:59`);
-        return eventDate >= today;
-      });
+    async function loadEvents() {
+      try {
+        // MongoDB .limit(6) is applied on the API for the home page
+        const data = await apiFetch<EventsResponse>("/events?limit=6");
 
-      setUpcomingEvents(filtered);
-      setIsMounted(true);
+        if (active) {
+          setUpcomingEvents(data.events || []);
+          setLoadError("");
+        }
+      } catch (error) {
+        if (active) {
+          setLoadError(
+            error instanceof ApiError
+              ? error.message
+              : "Unable to load events right now."
+          );
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
+    loadEvents();
+
+    return () => {
+      active = false;
     };
-
-    filterUpcomingEvents();
-
-    const interval = setInterval(filterUpcomingEvents, 60000);
-
-    return () => clearInterval(interval);
   }, []);
+
+  const categories = useMemo(() => {
+    const found = new Set(
+      upcomingEvents.map((event) => event.category).filter(Boolean)
+    );
+
+    return ["All Events", ...Array.from(found)];
+  }, [upcomingEvents]);
 
   const filteredEvents = useMemo(() => {
     return upcomingEvents.filter((event) => {
@@ -205,7 +155,7 @@ export default function UpcomingEvents() {
 
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <CalendarDays size={17} className="text-primary" />
-            {isMounted ? upcomingEvents.length : "—"} Upcoming Events
+            {loading ? "—" : upcomingEvents.length} Upcoming Events
           </div>
         </div>
 
@@ -243,7 +193,7 @@ export default function UpcomingEvents() {
           </div>
         </div>
 
-        {!isMounted ? (
+        {loading ? (
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 3 }).map((_, index) => (
               <div
@@ -252,18 +202,31 @@ export default function UpcomingEvents() {
               />
             ))}
           </div>
+        ) : loadError ? (
+          <div className="rounded-2xl border border-dashed border-border py-20 text-center">
+            <CloudOff className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+
+            <h3 className="text-xl font-bold text-foreground">
+              Could Not Load Events
+            </h3>
+
+            <p className="mt-2 text-sm text-muted-foreground">
+              {loadError}
+            </p>
+          </div>
         ) : filteredEvents.length > 0 ? (
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
             {filteredEvents.map((event) => (
               <article
-                key={event.id}
+                key={event._id}
                 className="group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/5"
               >
                 <div className="relative h-56 overflow-hidden bg-secondary">
                   <Image
-                    src={event.image}
+                    src={event.image?.trim() || FALLBACK_EVENT_IMAGE}
                     alt={event.title}
                     fill
+                    unoptimized
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
@@ -294,17 +257,16 @@ export default function UpcomingEvents() {
                         className="shrink-0 text-primary"
                       />
                       {formatDate(event.date)}
-                      <span className="text-xs">• {event.time}</span>
                     </div>
 
                     <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
                       <Users size={17} className="shrink-0 text-primary" />
-                      {event.volunteers}/{event.requiredVolunteers} Volunteers
+                      {event.joinCount || 0} Volunteers Joined
                     </div>
                   </div>
 
                   <Link
-                    href={`/events/${event.id}`}
+                    href={`/events/${event._id}`}
                     className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-bold text-primary-foreground transition hover:opacity-90"
                   >
                     View Event

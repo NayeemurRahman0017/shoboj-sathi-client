@@ -13,6 +13,7 @@ PlusCircle,
 CalendarDays,
 Users,
 LogOut,
+UserCircle2,
 } from "lucide-react";
 import { FaUserCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
@@ -26,6 +27,11 @@ const navLinks = [
 ];
 
 const dashboardLinks = [
+{
+name: "My Profile",
+href: "/profile",
+icon: UserCircle2,
+},
 {
 name: "Create Event",
 href: "/create-event",
@@ -104,20 +110,20 @@ pathname === href ||
 );
 }
 
-return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9BB5A0]/95 backdrop-blur-md"> <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9BB5A0]/95 backdrop-blur-md dark:border-white/10 dark:bg-[#0f2a1e]/95"> <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
  <Link
        href="/"
        onClick={closeMenus}
        className="flex items-center gap-2"
-     > <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#174d36] text-white"> <Leaf size={23} /> </div>
+     > <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#174d36] text-white dark:bg-emerald-700"> <Leaf size={23} /> </div>
 
 
       <div>
-        <span className="text-xl font-bold tracking-tight text-[#174d36]">
+        <span className="text-xl font-bold tracking-tight text-[#174d36] dark:text-emerald-300">
           ShobujShathi
         </span>
 
-        <p className="text-[10px] font-medium tracking-wider text-gray-500">
+        <p className="text-[10px] font-medium tracking-wider text-gray-600 dark:text-emerald-100/70">
           TOGETHER, WE MAKE A DIFFERENCE
         </p>
       </div>
@@ -130,8 +136,8 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
           href={link.href}
           className={`text-sm font-semibold transition ${
             isActiveRoute(link.href)
-              ? "text-emerald-800"
-              : "text-gray-600 hover:text-emerald-700"
+              ? "text-emerald-900 dark:text-emerald-300"
+              : "text-gray-700 hover:text-emerald-800 dark:text-emerald-100/80 dark:hover:text-emerald-300"
           }`}
         >
           {link.name}
@@ -145,7 +151,7 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
       {!isPending && !user && (
         <Link
           href="/login"
-          className="rounded-xl bg-[#174d36] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800"
+          className="rounded-xl bg-[#174d36] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800 dark:bg-emerald-700 dark:hover:bg-emerald-600"
         >
           Login
         </Link>
@@ -162,7 +168,8 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
             aria-expanded={profileMenuOpen}
             aria-haspopup="menu"
             aria-label="Open profile menu"
-            className="flex items-center gap-2 rounded-full border border-emerald-100 bg-white py-1.5 pl-1.5 pr-3 transition hover:bg-emerald-50"
+            title={user.name || "My Account"}
+            className="flex items-center gap-2 rounded-full border border-emerald-100 bg-white py-1.5 pl-1.5 pr-3 transition hover:bg-emerald-50 dark:border-white/15 dark:bg-[#17251d] dark:hover:bg-white/5"
           >
             {user.image ? (
               <Image
@@ -171,19 +178,20 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
                 width={36}
                 height={36}
                 unoptimized
+                title={user.name || "My Account"}
                 className="h-9 w-9 rounded-full object-cover"
               />
             ) : (
-              <FaUserCircle className="h-9 w-9 text-emerald-700" />
+              <FaUserCircle className="h-9 w-9 text-emerald-700 dark:text-emerald-400" />
             )}
 
-            <span className="max-w-28 truncate text-sm font-semibold text-[#174d36]">
+            <span className="max-w-28 truncate text-sm font-semibold text-[#174d36] dark:text-emerald-200">
               {user.name || "My Account"}
             </span>
 
             <ChevronDown
               size={16}
-              className={`text-gray-500 transition ${
+              className={`text-gray-500 transition dark:text-gray-400 ${
                 profileMenuOpen ? "rotate-180" : ""
               }`}
             />
@@ -192,14 +200,14 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
           {profileMenuOpen && (
             <div
               onMouseLeave={() => setProfileMenuOpen(false)}
-              className="absolute right-0 top-full mt-3 w-64 overflow-hidden rounded-2xl border border-gray-100 bg-white py-3 shadow-xl"
+              className="absolute right-0 top-full mt-3 w-64 overflow-hidden rounded-2xl border border-gray-100 bg-white py-3 shadow-xl dark:border-white/10 dark:bg-[#17251d]"
             >
-              <div className="border-b border-gray-100 px-4 pb-3">
-                <p className="truncate text-sm font-bold text-[#174d36]">
+              <div className="border-b border-gray-100 px-4 pb-3 dark:border-white/10">
+                <p className="truncate text-sm font-bold text-[#174d36] dark:text-emerald-200">
                   {user.name || "My Account"}
                 </p>
 
-                <p className="truncate text-xs text-gray-500">
+                <p className="truncate text-xs text-gray-500 dark:text-gray-400">
                   {user.email}
                 </p>
               </div>
@@ -215,8 +223,8 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
                       onClick={closeMenus}
                       className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition ${
                         isActiveRoute(link.href)
-                          ? "bg-emerald-50 text-emerald-800"
-                          : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-800"
+                          ? "bg-emerald-50 text-emerald-800 dark:bg-white/10 dark:text-emerald-300"
+                          : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-800 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-emerald-300"
                       }`}
                     >
                       <Icon size={18} />
@@ -226,11 +234,11 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
                 })}
               </div>
 
-              <div className="border-t border-gray-100 pt-2">
+              <div className="border-t border-gray-100 pt-2 dark:border-white/10">
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
                 >
                   <LogOut size={18} />
                   Logout
@@ -252,7 +260,7 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
         }
         aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
         aria-expanded={mobileMenuOpen}
-        className="rounded-lg p-2 text-[#174d36] transition hover:bg-emerald-50"
+        className="rounded-lg p-2 text-[#174d36] transition hover:bg-emerald-50 dark:text-emerald-200 dark:hover:bg-white/10"
       >
         {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
@@ -260,7 +268,7 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
   </nav>
 
   {mobileMenuOpen && (
-    <div className="border-t border-emerald-100 bg-[#283618] px-5 py-5 shadow-lg md:hidden">
+    <div className="border-t border-emerald-100 bg-[#283618] px-5 py-5 shadow-lg md:hidden dark:border-white/10 dark:bg-[#0f2a1e]">
       <div className="flex flex-col gap-2">
         {navLinks.map((link) => (
           <Link
@@ -269,8 +277,8 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
             onClick={closeMenus}
             className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
               isActiveRoute(link.href)
-                ? "bg-emerald-100 text-emerald-800"
-                : "text-gray-600 hover:bg-emerald-50"
+                ? "bg-emerald-100 text-emerald-800 dark:bg-white/15 dark:text-emerald-200"
+                : "text-emerald-50 hover:bg-white/10 dark:text-emerald-100"
             }`}
           >
             {link.name}
@@ -278,12 +286,12 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
         ))}
       </div>
 
-      <div className="mt-4 border-t border-emerald-100 pt-4">
+      <div className="mt-4 border-t border-white/15 pt-4">
         {!isPending && !user && (
           <Link
             href="/login"
             onClick={closeMenus}
-            className="block rounded-xl bg-[#174d36] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-emerald-800"
+            className="block rounded-xl bg-[#174d36] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-emerald-800 dark:bg-emerald-700 dark:hover:bg-emerald-600"
           >
             Login
           </Link>
@@ -291,7 +299,7 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
 
         {!isPending && user && (
           <>
-            <div className="mb-4 flex items-center gap-3 rounded-xl bg-emerald-50 p-3">
+            <div className="mb-4 flex items-center gap-3 rounded-xl bg-white/10 p-3">
               {user.image ? (
                 <Image
                   src={user.image}
@@ -299,18 +307,19 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
                   width={42}
                   height={42}
                   unoptimized
+                  title={user.name || "My Account"}
                   className="h-11 w-11 rounded-full object-cover"
                 />
               ) : (
-                <FaUserCircle className="h-11 w-11 text-emerald-700" />
+                <FaUserCircle className="h-11 w-11 text-emerald-300" />
               )}
 
               <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-[#174d36]">
+                <p className="truncate text-sm font-bold text-white">
                   {user.name || "My Account"}
                 </p>
 
-                <p className="truncate text-xs text-gray-500">
+                <p className="truncate text-xs text-emerald-100/80">
                   {user.email}
                 </p>
               </div>
@@ -327,8 +336,8 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
                     onClick={closeMenus}
                     className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
                       isActiveRoute(link.href)
-                        ? "bg-emerald-100 text-emerald-800"
-                        : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-800"
+                        ? "bg-white/15 text-white dark:text-emerald-200"
+                        : "text-emerald-50 hover:bg-white/10 dark:text-emerald-100"
                     }`}
                   >
                     <Icon size={18} />
@@ -341,7 +350,7 @@ return ( <header className="sticky top-0 z-50 border-b border-emerald-100 bg-[#9
             <button
               type="button"
               onClick={handleLogout}
-              className="mt-3 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+              className="mt-3 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-red-300 transition hover:bg-white/10"
             >
               <LogOut size={18} />
               Logout

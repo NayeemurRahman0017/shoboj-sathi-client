@@ -9,12 +9,13 @@ FaMapMarkerAlt,
 FaPhoneAlt,
 FaHeart,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 const quickLinks = [
 { name: "Home", href: "/" },
 { name: "Upcoming Events", href: "/events" },
-{ name: "About Us", href: "/about" },
-{ name: "Contact", href: "/contact" },
+{ name: "Create Event", href: "/create-event" },
+{ name: "Contact Us", href: "mailto:hello@shobujshathi.com" },
 ];
 
 const categories = [
@@ -26,6 +27,11 @@ const categories = [
 ];
 
 const socialLinks = [
+{
+name: "X",
+href: "#",
+icon: FaXTwitter,
+},
 {
 name: "Facebook",
 href: "#",

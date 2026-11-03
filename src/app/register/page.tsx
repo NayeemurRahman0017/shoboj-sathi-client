@@ -267,7 +267,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-[#103c29] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-[#103c29] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-emerald-700 dark:hover:bg-emerald-600"
               >
                 {loading && (
                   <Loader2 className="h-5 w-5 animate-spin" />

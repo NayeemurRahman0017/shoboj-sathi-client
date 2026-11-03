@@ -1,9 +1,9 @@
 
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Eye,
   EyeOff,
@@ -14,9 +14,13 @@ import {
 } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const callbackURL = searchParams.get("callbackURL") || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +39,7 @@ export default function LoginPage() {
       const { error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: "/",
+        callbackURL,
       });
 
       if (error) {
@@ -43,7 +47,9 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/");
+      toast.success("Welcome back! You are logged in.");
+
+      router.push(callbackURL);
       router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");
@@ -59,7 +65,7 @@ export default function LoginPage() {
     try {
       const { error } = await authClient.signIn.social({
         provider,
-        callbackURL: "/",
+        callbackURL,
       });
 
       if (error) {
@@ -240,7 +246,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || !!socialLoading}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-[#103c29] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-[#103c29] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-emerald-700 dark:hover:bg-emerald-600"
               >
                 {loading && <Loader2 className="h-5 w-5 animate-spin" />}
                 {loading ? "Signing in..." : "Sign In"}
@@ -262,5 +268,13 @@ export default function LoginPage() {
       </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

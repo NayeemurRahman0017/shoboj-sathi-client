@@ -1,342 +1,365 @@
+
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {
-CalendarDays,
-Image as ImageIcon,
-MapPin,
-Type,
-FileText,
-Tag,
-ArrowLeft,
-Leaf,
+  CalendarDays,
+  Image as ImageIcon,
+  MapPin,
+  Type,
+  FileText,
+  Tag,
+  ArrowLeft,
+  Leaf,
 } from "lucide-react";
+import { apiFetch, ApiError } from "@/lib/api";
 
 const eventCategories = [
-"Cleanup",
-"Plantation",
-"Donation",
-"Healthcare",
-"Education",
-"Food Distribution",
-"Other",
+  "Cleanup",
+  "Plantation",
+  "Donation",
+  "Healthcare",
+  "Education",
+  "Food Distribution",
+  "Other",
 ];
 
 interface EventForm {
-title: string;
-description: string;
-category: string;
-image: string;
-location: string;
-date: string;
+  title: string;
+  description: string;
+  category: string;
+  image: string;
+  location: string;
+  date: string;
 }
 
 function getLocalDateString() {
-const date = new Date();
-const year = date.getFullYear();
-const month = String(date.getMonth() + 1).padStart(2, "0");
-const day = String(date.getDate()).padStart(2, "0");
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
 
-return `${year}-${month}-${day}`;
+  return `${year}-${month}-${day}`;
 }
 
 export default function CreateEventPage() {
-const router = useRouter();
+  const router = useRouter();
 
-const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [minDate, setMinDate] = useState("");
 
-const [formData, setFormData] = useState<EventForm>({
-title: "",
-description: "",
-category: "",
-image: "",
-location: "",
-date: "",
-});
+  const [formData, setFormData] = useState<EventForm>({
+    title: "",
+    description: "",
+    category: "",
+    image: "",
+    location: "",
+    date: "",
+  });
 
-function handleChange(
-e: React.ChangeEvent<
-HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
->
-) {
-const { name, value } = e.target;
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setMinDate(getLocalDateString());
+    }, 0);
 
+    return () => window.clearTimeout(timer);
+  }, []);
 
-setFormData((previous) => ({
-  ...previous,
-  [name]: value,
-}));
+  function handleChange(
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) {
+    const { name, value } = e.target;
 
-
-}
-
-function handleSubmit(e: FormEvent<HTMLFormElement>) {
-e.preventDefault();
-
-
-if (isSubmitting) return;
-
-if (!formData.title.trim()) {
-  toast.error("Please enter an event title.");
-  return;
-}
-
-if (!formData.description.trim()) {
-  toast.error("Please enter an event description.");
-  return;
-}
-
-if (!formData.category) {
-  toast.error("Please select an event category.");
-  return;
-}
-
-if (!formData.image.trim()) {
-  toast.error("Please provide an event image URL.");
-  return;
-}
-
-try {
-  const imageUrl = new URL(formData.image);
-
-  if (!["http:", "https:"].includes(imageUrl.protocol)) {
-    toast.error("Please enter a valid image URL.");
-    return;
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
   }
-} catch {
-  toast.error("Please enter a valid image URL.");
-  return;
-}
 
-if (!formData.location.trim()) {
-  toast.error("Please enter the event location.");
-  return;
-}
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-if (!formData.date) {
-  toast.error("Please select an event date.");
-  return;
-}
+    if (isSubmitting) return;
 
-if (formData.date <= getLocalDateString()) {
-  toast.error("Please select a future date.");
-  return;
-}
+    if (!formData.title.trim()) {
+      toast.error("Please enter an event title.");
+      return;
+    }
 
-setIsSubmitting(true);
+    if (!formData.description.trim()) {
+      toast.error("Please enter an event description.");
+      return;
+    }
 
-toast.success("Event form completed successfully!");
+    if (!formData.category) {
+      toast.error("Please select an event category.");
+      return;
+    }
 
-setTimeout(() => {
-  router.push("/events");
-}, 1000);
+    if (formData.image.trim()) {
+      try {
+        const imageUrl = new URL(formData.image.trim());
 
+        if (!["http:", "https:"].includes(imageUrl.protocol)) {
+          toast.error("Please enter a valid image URL.");
+          return;
+        }
+      } catch {
+        toast.error("Please enter a valid image URL.");
+        return;
+      }
+    }
 
-}
+    if (!formData.location.trim()) {
+      toast.error("Please enter the event location.");
+      return;
+    }
 
-const inputClass =
-"w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
+    if (!formData.date || formData.date <= getLocalDateString()) {
+      toast.error("Please select a future date.");
+      return;
+    }
 
-return ( <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14"> <div className="container mx-auto px-4"> <div className="mx-auto max-w-5xl">
- <Link
-       href="/events"
-       className="mb-7 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-emerald-700"
-     > <ArrowLeft size={17} />
-Back to Events </Link>
+    try {
+      setIsSubmitting(true);
 
+      const data = await apiFetch<{ result?: { insertedId?: string } }>(
+        "/create-event",
+        {
+          method: "POST",
+          body: JSON.stringify(formData),
+        },
+        "required"
+      );
 
-    <div className="mb-9">
-      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
-        <Leaf size={16} />
-        Make a Difference
-      </div>
+      if (data.result?.insertedId) {
+        toast.success("Event created successfully!");
+        router.push("/events");
+      } else {
+        toast.error("Failed to create event!");
+      }
+    } catch (error) {
+      console.error("Create Event Error:", error);
 
-      <h1 className="text-3xl font-bold tracking-tight text-[#174d36] sm:text-4xl">
-        Create an Event
-      </h1>
+      toast.error(
+        error instanceof ApiError
+          ? error.message
+          : "Failed to create event!"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-      <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500 sm:text-base">
-        Bring people together for a meaningful cause. Create an event and
-        inspire your community to make a positive impact.
-      </p>
-    </div>
+  const inputClass =
+    "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 dark:border-white/15 dark:bg-[#101b16] dark:text-white dark:placeholder:text-gray-500 dark:focus:border-emerald-500";
 
-    <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-      <div className="bg-[#174d36] px-6 py-7 text-white sm:px-9">
-        <h2 className="text-xl font-semibold">Event Information</h2>
-
-        <p className="mt-2 text-sm text-emerald-100">
-          Fill in the details below to create your community event.
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-7 p-6 sm:p-9">
-        <div>
-          <label
-            htmlFor="title"
-            className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
+  return (
+    <main className="min-h-screen bg-[#faf9f5] px-4 py-10 sm:px-6 lg:py-14 dark:bg-[#101b16]">
+      <div className="container mx-auto px-4">
+        <div className="mx-auto max-w-5xl">
+          <Link
+            href="/events"
+            className="mb-7 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-emerald-700 dark:text-gray-400 dark:hover:text-emerald-400"
           >
-            <Type size={17} className="text-emerald-700" />
-            Event Title
-          </label>
+            <ArrowLeft size={17} />
+            Back to Events
+          </Link>
 
-          <input
-            id="title"
-            name="title"
-            type="text"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="e.g. Winter Clothes Distribution"
-            className={inputClass}
-            required
-          />
-        </div>
+          <div className="mb-9">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+              <Leaf size={16} />
+              Make a Difference
+            </div>
 
-        <div>
-          <label
-            htmlFor="description"
-            className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
-          >
-            <FileText size={17} className="text-emerald-700" />
-            Event Description
-          </label>
+            <h1 className="text-3xl font-bold tracking-tight text-[#174d36] sm:text-4xl dark:text-emerald-300">
+              Create an Event
+            </h1>
 
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Describe the purpose and activities of your event..."
-            rows={5}
-            className={`${inputClass} resize-none`}
-            required
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="category"
-            className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
-          >
-            <Tag size={17} className="text-emerald-700" />
-            Event Category
-          </label>
-
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className={inputClass}
-            required
-          >
-            <option value="">Select an event category</option>
-
-            {eventCategories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label
-            htmlFor="image"
-            className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
-          >
-            <ImageIcon size={17} className="text-emerald-700" />
-            Thumbnail Image URL
-          </label>
-
-          <input
-            id="image"
-            name="image"
-            type="url"
-            value={formData.image}
-            onChange={handleChange}
-            placeholder="https://example.com/event-image.jpg"
-            className={inputClass}
-            required
-          />
-
-          <p className="mt-2 text-xs text-gray-400">
-            Provide a publicly accessible image URL.
-          </p>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="location"
-              className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
-            >
-              <MapPin size={17} className="text-emerald-700" />
-              Event Location
-            </label>
-
-            <input
-              id="location"
-              name="location"
-              type="text"
-              value={formData.location}
-              onChange={handleChange}
-              placeholder="e.g. Mirpur 10, Dhaka"
-              className={inputClass}
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="date"
-              className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
-            >
-              <CalendarDays size={17} className="text-emerald-700" />
-              Event Date
-            </label>
-
-            <input
-              id="date"
-              name="date"
-              type="date"
-              value={formData.date}
-              onChange={handleChange}
-              className={inputClass}
-              required
-            />
-
-            <p className="mt-2 text-xs text-gray-400">
-              Only future dates are allowed.
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500 sm:text-base dark:text-gray-400">
+              Bring people together for a meaningful cause. Create an event
+              and inspire your community to make a positive impact.
             </p>
           </div>
+
+          <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-white/10 dark:bg-[#17251d]">
+            <div className="bg-[#174d36] px-6 py-7 text-white sm:px-9 dark:bg-emerald-800">
+              <h2 className="text-xl font-semibold">Event Information</h2>
+
+              <p className="mt-2 text-sm text-emerald-100">
+                Fill in the details below to create your community event.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-7 p-6 sm:p-9">
+              <div>
+                <label
+                  htmlFor="title"
+                  className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  <Type size={17} className="text-emerald-700" />
+                  Event Title
+                </label>
+
+                <input
+                  id="title"
+                  name="title"
+                  type="text"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="e.g. Winter Clothes Distribution"
+                  className={inputClass}
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="description"
+                  className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  <FileText size={17} className="text-emerald-700" />
+                  Event Description
+                </label>
+
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe the purpose and activities of your event..."
+                  rows={5}
+                  className={`${inputClass} resize-none`}
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="category"
+                  className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  <Tag size={17} className="text-emerald-700" />
+                  Event Category
+                </label>
+
+                <select
+                  id="category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className={inputClass}
+                  required
+                >
+                  <option value="">Select an event category</option>
+
+                  {eventCategories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="image"
+                  className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  <ImageIcon size={17} className="text-emerald-700" />
+                  Thumbnail Image URL
+                </label>
+
+                <input
+                  id="image"
+                  name="image"
+                  type="url"
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="https://example.com/event-image.jpg"
+                  className={inputClass}
+                  required
+                />
+
+                <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                  Provide a publicly accessible image URL.
+                </p>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="location"
+                    className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+                  >
+                    <MapPin size={17} className="text-emerald-700" />
+                    Event Location
+                  </label>
+
+                  <input
+                    id="location"
+                    name="location"
+                    type="text"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="e.g. Mirpur 10, Dhaka"
+                    className={inputClass}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="date"
+                    className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+                  >
+                    <CalendarDays size={17} className="text-emerald-700" />
+                    Event Date
+                  </label>
+
+                  <input
+                    id="date"
+                    name="date"
+                    type="date"
+                    min={minDate || undefined}
+                    value={formData.date}
+                    onChange={handleChange}
+                    className={inputClass}
+                    required
+                  />
+
+                  <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+                    Only future dates are allowed.
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-100 pt-6">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:min-w-48 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                >
+                  {isSubmitting ? "Creating Event..." : "Create Event"}
+
+                  {!isSubmitting && <Leaf size={17} />}
+                </button>
+
+                <p className="mt-4 text-xs leading-6 text-gray-400 dark:text-gray-500">
+                  By creating an event, you agree to organize it responsibly
+                  and respect the community.
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
-
-        <div className="border-t border-gray-100 pt-6">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#174d36] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:min-w-48"
-          >
-            {isSubmitting ? "Creating Event..." : "Create Event"}
-
-            {!isSubmitting && <Leaf size={17} />}
-          </button>
-
-          <p className="mt-4 text-xs leading-6 text-gray-400">
-            By creating an event, you agree to organize it responsibly and
-            respect the community.
-          </p>
-        </div>
-      </form>
-    </div>
-  </div>
-  </div>
-</main>
-
-
-);
+      </div>
+    </main>
+  );
 }
+

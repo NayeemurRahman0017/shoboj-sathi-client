@@ -5,6 +5,7 @@ const protectedRoutes = [
   "/create-event",
   "/manage-events",
   "/joined-events",
+  "/profile",
 ];
 
 export function proxy(request: NextRequest) {
@@ -31,5 +32,6 @@ export const config = {
     "/create-event/:path*",
     "/manage-events/:path*",
     "/joined-events/:path*",
+    "/profile/:path*",
   ],
 };

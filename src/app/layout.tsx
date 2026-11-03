@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { Suspense } from "react";
+import { Toaster } from "react-hot-toast";
 
 const josefinSans = Josefin_Sans({
   variable: "--font-josefin",
@@ -41,6 +42,20 @@ export default function RootLayout({
   </Suspense>
           {children}
            <Footer />
+
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                borderRadius: "12px",
+                fontFamily: "var(--font-josefin)",
+                fontWeight: 600,
+              },
+              success: {
+                iconTheme: { primary: "#174d36", secondary: "#ffffff" },
+              },
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>
