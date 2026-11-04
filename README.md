@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌿 ShobujShathi – Together, We Make a Difference
 
-## Getting Started
+ShobujShathi is a community-driven social development platform that connects people who want to make a positive impact in society. Users can create social service events, participate in community activities, and contribute to building a better environment for everyone.
 
-First, run the development server:
+## 🌐 Live Website
+
+**Live Site:** https://shoboj-sathi-client.vercel.app
+
+## ✨ Key Features
+
+* **User Authentication:** Secure registration and login using email/password, Google, and GitHub authentication.
+* **Create Events:** Authenticated users can create and publish social development events in their local communities.
+* **Explore Events:** Browse upcoming social service events with relevant details, categories, locations, and dates.
+* **Join Events:** Logged-in users can participate in events and contribute to meaningful community activities.
+* **Manage Events:** Event organizers can view, update, and delete their own events.
+* **Joined Events:** Users can track the events they have joined and manage their participation.
+* **Responsive Design:** Fully responsive interface for desktop, tablet, and mobile devices.
+* **Community Impact:** Encourages volunteering, environmental awareness, education, healthcare, and social support.
+
+## 🛠️ Technologies Used
+
+**Frontend:**
+
+* Next.js
+* React
+* TypeScript
+* Tailwind CSS
+* shadcn/ui
+* Better Auth
+* React Icons
+
+**Backend & Database:**
+
+* Node.js
+* Express.js
+* MongoDB
+
+## 📦 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone YOUR_CLIENT_GITHUB_REPOSITORY_URL
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
+cd shobuj-sathi-client
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure Environment Variables
+
+Create a `.env` file in the root directory and configure the required environment variables.
+
+```env
+MONGODB_URL=
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=
+NEXT_PUBLIC_APP_URL=
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+NEXT_PUBLIC_API_URL=
+```
+
+### 5. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Project Purpose
 
-## Learn More
+The main goal of ShobujShathi is to make community service activities easier to organize and accessible to everyone. By connecting organizers and volunteers through a single platform, we aim to encourage collaboration, kindness, and positive social change.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**ShobujShathi – Together, We Make a Difference.** 🌱
