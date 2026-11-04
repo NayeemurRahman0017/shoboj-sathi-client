@@ -7,7 +7,12 @@ const client = new MongoClient(process.env.MONGODB_URL!);
 const db = client.db("shobujshathi");
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://shoboj-sathi-client.vercel.app",
+  ],
 
   database: mongodbAdapter(db, {
     client,
